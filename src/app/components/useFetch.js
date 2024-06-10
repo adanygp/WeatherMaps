@@ -1,3 +1,4 @@
+"use client"; 
 import { useState, useEffect } from 'react';
 
 const useFetch = (url) => {
@@ -25,6 +26,7 @@ const useFetch = (url) => {
     };
 
     fetchData();
+  console.log('url',url)
   }, [url]);
 
   return { data, loading, error };

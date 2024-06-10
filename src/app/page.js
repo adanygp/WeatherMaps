@@ -1,30 +1,30 @@
 'use strict';
 "use client"; 
-import { MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet";
-import DraggableMarker from "./components/DraggableMarker";
+import dynamic from "next/dynamic"
 import AreaChart from "./components/AreaChart";
+import LineChart from "./components/LineChart";
 import useFetch from "./components/useFetch";
-import {useState} from "react";
+const Map = dynamic(() => import("./components/Map"), { ssr:false })
+import {useState, useEffect} from "react";
 import 'leaflet/dist/leaflet.css'
 
 export default function Home() {
 
   const [initialCordinates , setInitialCordinates] = useState({ lat: 20, lng: -105,})
-  const { data, loading, error } = useFetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${initialCordinates.lat}&lon=${initialCordinates.lng}&appid=77c1bc8254074d5f6da1b17e9975b58d`);
+  const [fetchUrl, setFetchUrl] = useState(`https://api.openweathermap.org/data/2.5/forecast?lat=${initialCordinates.lat}&lon=${initialCordinates.lng}&appid=77c1bc8254074d5f6da1b17e9975b58d`)
+  const { data, loading, error } = useFetch(fetchUrl);
+
+  useEffect(() => {
+    setFetchUrl(`https://api.openweathermap.org/data/2.5/forecast?lat=${initialCordinates.lat}&lon=${initialCordinates.lng}&appid=77c1bc8254074d5f6da1b17e9975b58d`)
+  }, [initialCordinates]);
+
   const handleCordinates = (e) => {
       const { name, value } = e.target;
       setInitialCordinates({...initialCordinates, [name]:value})
   }
 
-  const MapEvents = () => {
-    useMapEvents({
-      dblclick(e) {
-        const { lat, lng } = e.latlng;
-        setInitialCordinates({lat:lat, lng:lng});
-      }
-    });
-    return null;
-  };
+
+  console.log('data',data)
   return (
     <>
       <form className="container flex flex-col m-auto">
@@ -38,14 +38,14 @@ export default function Home() {
               <div className="sm:col-span-3">
                 <label className="block text-sm font-medium leading-6 text-gray-900">Latencia</label>
                 <div className="mt-2">
-                  <input type="number" name="lat" id="lat" value={initialCordinates.lat} onChange={handleCordinates} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                  <input aria-label="Input de Latencia" type="number" name="lat" id="lat" value={initialCordinates.lat} onChange={handleCordinates} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                 </div>
               </div>
 
               <div className="sm:col-span-3">
                 <label className="block text-sm font-medium leading-6 text-gray-900">Longitud</label>
                 <div className="mt-2">
-                  <input type="number" name="lng" id="lng" value={initialCordinates.lng} onChange={handleCordinates} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                  <input aria-label="Input de Longitud" type="number" name="lng" id="lng" value={initialCordinates.lng} onChange={handleCordinates} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                 </div>
               </div>
 
@@ -53,21 +53,15 @@ export default function Home() {
           </div>
         </div>
       </form>
-      <div className="container mx-auto">
-        <MapContainer className="container m-auto" center={initialCordinates} zoom={6} scrollWheelZoom={false} doubleClickZoom={false} id="map">
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-          />
-          <DraggableMarker cordinates={initialCordinates} changeCordinates={setInitialCordinates}/>
-          <MapEvents />
-        </MapContainer>
+      <div className="container mx-auto"> 
+        <Map cordinates={initialCordinates} changeCordinates={setInitialCordinates}/>
       </div>
       {loading && <div>Loading...</div>}
       {error && <div>Error: {error.message}</div>}
       {data && (
         <div className="container mx-auto bg-white">
-          <AreaChart weatherData={data} />
+          <AreaChart weatherData={data} fetchUrl={fetchUrl}/>
+          <LineChart weatherData={data} fetchUrl={fetchUrl}/>
         </div>
       )}
     </>

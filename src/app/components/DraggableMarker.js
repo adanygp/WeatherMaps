@@ -1,5 +1,4 @@
-"use client"; 
-'use strict';
+"use client";
 import {useState,useCallback,useRef,useMemo } from 'react'
 import { Marker } from "react-leaflet";
 import L from 'leaflet';

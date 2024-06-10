@@ -4,7 +4,7 @@ import { Line } from "react-chartjs-2";
 import { useState, useEffect } from 'react';
 import regression from 'regression';
 
-export default function AreaChart({weatherData}) {
+export default function AreaChart({weatherData, fetchUrl}) {
 
   const [activeFilter, setActiveFilter] = useState(false)
   const [areaChartData, setAreaChartData] = useState("")
@@ -20,6 +20,7 @@ export default function AreaChart({weatherData}) {
       setSelectYVector("");
     }
     setSelectXVector(value);
+    setPredictionArray([]);
   };
 
   const handleYVector = (e) => {
@@ -28,6 +29,7 @@ export default function AreaChart({weatherData}) {
       setSelectXVector("");
     }
     setSelectYVector(value);
+    setPredictionArray([]);
   };
   
   const handlePrediction = (e) => {
@@ -44,7 +46,8 @@ export default function AreaChart({weatherData}) {
     const resultRegresion = regression.linear(dataLinear);
     resultRegresion.points.push(...predictionArray, resultRegresion.predict(prediction))
     setPredictionArray([...predictionArray, resultRegresion.predict(prediction)])
-    console.log(resultRegresion.points)
+
+    
     resultRegresion.points.sort(function (a, b) {
       if (a[0] > b[0]) {
         return 1;
@@ -73,7 +76,7 @@ export default function AreaChart({weatherData}) {
       labels: dataX,
       datasets: [
         {
-          label: "Temperatura (°C)",
+          label: `Regresion lineal ${weatherData.city.name}, ${weatherData.city.country} `,
           data: dataY,
           backgroundColor: "rgba(255, 99, 132, 0.2)",
           borderColor: "rgba(255, 99, 132, 1)",
@@ -88,11 +91,64 @@ export default function AreaChart({weatherData}) {
 
     setPrediction("")
   }
-  console.log("predictionArray",predictionArray)
 
   useEffect(() => {
     if (selectXVector !== "" && selectYVector !== "" && selectXVector !== selectYVector) {
       setActiveFilter(true);
+
+      const dataLinear = [];
+      const dataX = [];
+      const dataY = [];
+
+      if(activeFilter){
+        weatherData.list.forEach((entry) => {
+          dataLinear.push([entry.main[selectXVector], entry.main[selectYVector] ]);
+        });
+        
+        const resultRegresion = regression.linear(dataLinear);
+        //resultRegresion.points.push([...predictionArray])
+      
+        resultRegresion.points.sort(function (a, b) {
+          if (a[0] > b[0]) {
+            return 1;
+          }
+          if (a[0] < b[0]) {
+            return -1;
+          }
+          return 0;
+        });
+        
+        const arregloSinDuplicados = resultRegresion.points.reduce((acumulador, elementoActual) => {
+          const existe = acumulador.some((elementoPrevio) => JSON.stringify(elementoPrevio) === JSON.stringify(elementoActual));
+          if (!existe) {
+            acumulador.push(elementoActual);
+          }
+          return acumulador;
+        }, []);
+      
+        arregloSinDuplicados.forEach((entry) => {
+          dataX.push(entry[0]);
+          dataY.push(entry[1]);
+        });
+      
+      
+        setAreaChartData({
+          labels: dataX,
+          datasets: [
+            {
+              label: `Regresion lineal ${weatherData.city.name}, ${weatherData.city.country} `,
+              data: dataY,
+              backgroundColor: "rgba(255, 99, 132, 0.2)",
+              borderColor: "rgba(255, 99, 132, 1)",
+              borderWidth: 1,
+            },
+          ],
+          options: {  
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        })
+      }
     } else {
       setActiveFilter(false);
       setAreaChartData("");
@@ -141,7 +197,7 @@ export default function AreaChart({weatherData}) {
         labels: dataX,
         datasets: [
           {
-            label: "Temperatura (°C)",
+            label: `Regresion lineal ${weatherData.city.name}, ${weatherData.city.country} `,
             data: dataY,
             backgroundColor: "rgba(255, 99, 132, 0.2)",
             borderColor: "rgba(255, 99, 132, 1)",
@@ -154,7 +210,7 @@ export default function AreaChart({weatherData}) {
         }
       })
     }
-  }, [activeFilter]);
+  }, [activeFilter, fetchUrl]);
   
 
   return (
@@ -168,7 +224,7 @@ export default function AreaChart({weatherData}) {
             <div className="sm:col-span-3">
               <label className="block text-sm font-medium leading-6 text-gray-900">Eje X</label>
               <div className="mt-2">
-                <select value={selectXVector} onChange={handleXVector}  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                <select aria-label="Input Vector X" value={selectXVector} onChange={handleXVector}  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                   <option value="" disabled>Selecciona Vector X</option>
                   {selectOptions.map((option ,key) => (
                     <option key={key} name={option.name} value={option.value}>{option.name}</option>
@@ -180,7 +236,7 @@ export default function AreaChart({weatherData}) {
             <div className="sm:col-span-3">
               <label className="block text-sm font-medium leading-6 text-gray-900">Eje Y</label>
               <div className="mt-2">
-                <select value={selectYVector} onChange={handleYVector} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600  sm:text-sm sm:leading-6">
+                <select aria-label="Input Vector Y" value={selectYVector} onChange={handleYVector} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600  sm:text-sm sm:leading-6">
                   <option value="" disabled>Selecciona Vector Y</option>
                   {selectOptions.map((option ,key) => (
                     <option key={key} name={option.name} value={option.value}>{option.name}</option>
@@ -204,11 +260,11 @@ export default function AreaChart({weatherData}) {
                 <div className="sm:col-span-3">
                   <label className="block text-sm font-medium leading-6 text-gray-900">Nuevo Valor eje X</label>
                   <div className="mt-2">
-                    <input type="float" value={prediction} onChange={(e) => {setPrediction(e.target.value)}} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                    <input aria-label="Input prediccion eje X" type="float" value={prediction} onChange={(e) => {setPrediction(e.target.value)}} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                   </div>
                 </div>
                 <div className="sm:col-span-3 mt-auto">
-                  <button type="submit" className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Agregar Prediccion</button>
+                  <button aria-label="Boton agregar valor eje X" type="submit" className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Agregar Prediccion</button>
                 </div>
               </div>
             </div>

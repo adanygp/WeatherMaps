@@ -26,6 +26,14 @@ body {
   height: 50vh;
 }
 
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker__input-container {
+  width: 100%;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
