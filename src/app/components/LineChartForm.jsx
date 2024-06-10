@@ -76,11 +76,11 @@ export default function LineChartForm({weatherData, setAreaChartData}) {
   return (
     <form className="container flex flex-col m-auto">
       <div className="pt-12 pb-12 mx-4 md:mx-0">
-        <h2 className="text-base font-semibold leading-7 text-gray-900">Grafica Temperaturas Futuras</h2>
-        <p className="mt-1 text-sm leading-6 text-gray-600">Elija el rango de dias a calcular, maximo 5 dias a futuro</p>
+        <h2 className="text-base font-semibold leading-7 text-gray-900 text-center md:text-left">Grafica Temperaturas Futuras</h2>
+        <p className="mt-1 text-sm leading-6 text-gray-600 text-center md:text-left">Elija el rango de dias a calcular, maximo 5 dias a futuro</p>
         <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div className="sm:col-span-3">
-            <label className="block text-sm font-medium text-gray-700">Eje X</label>
+            <label className="block text-sm font-medium text-gray-700 text-center md:text-left">Eje X</label>
             <div className="mt-2">
               <DatePicker
                 selected={startDate}
@@ -96,7 +96,7 @@ export default function LineChartForm({weatherData, setAreaChartData}) {
             </div>
           </div>
           <div className="sm:col-span-3">
-            <label className="block text-sm font-medium text-gray-700">Eje Y</label>
+            <label className="block text-sm font-medium text-gray-700 text-center md:text-left">Eje Y</label>
             <div className="mt-2">
               <DatePicker
                 selected={endDate}
@@ -112,7 +112,7 @@ export default function LineChartForm({weatherData, setAreaChartData}) {
             </div>
           </div>
         </div>
-        <p className="mt-1 text-sm leading-6 text-gray-600 flex justify-center">Desde {startDate.toLocaleDateString('es-ES', dateOptions)} a {endDate.toLocaleDateString('es-ES', dateOptions)}</p>
+        <p className="mt-1 text-sm leading-6 text-gray-600 flex justify-center text-center md:text-left">Desde {startDate.toLocaleDateString('es-ES', dateOptions)} a {endDate.toLocaleDateString('es-ES', dateOptions)}</p>
       </div>
     </form>
   );

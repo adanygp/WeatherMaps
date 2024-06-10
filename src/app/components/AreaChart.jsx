@@ -238,11 +238,11 @@ export default function AreaChart({weatherData}) {
     <>
       <form className="container flex flex-col m-auto">
         <div className="pt-12 pb-12 mx-4 md:mx-0">
-          <h2 className="text-base font-semibold leading-7 text-gray-900">Grafica regresion linear</h2>
-          <p className="mt-1 text-sm leading-6 text-gray-600">Elija las caracteristicas climaticas del eje X y Y para mostrar la grafica</p>
+          <h2 className="text-base font-semibold leading-7 text-gray-900  text-center md:text-left">Grafica regresion linear</h2>
+          <p className="mt-1 text-sm leading-6 text-gray-600  text-center md:text-left">Elija las caracteristicas climaticas del eje X y Y para mostrar la grafica</p>
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3">
-              <label className="block text-sm font-medium leading-6 text-gray-900">Eje X</label>
+              <label className="block text-sm font-medium leading-6 text-gray-900  text-center md:text-left">Eje X</label>
               <div className="mt-2">
                 <select aria-label="Input Vector X" value={selectXVector} onChange={handleXVector}  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                   <option value="" disabled>Selecciona Vector X</option>
@@ -254,7 +254,7 @@ export default function AreaChart({weatherData}) {
             </div>
 
             <div className="sm:col-span-3">
-              <label className="block text-sm font-medium leading-6 text-gray-900">Eje Y</label>
+              <label className="block text-sm font-medium leading-6 text-gray-900  text-center md:text-left">Eje Y</label>
               <div className="mt-2">
                 <select aria-label="Input Vector Y" value={selectYVector} onChange={handleYVector} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600  sm:text-sm sm:leading-6">
                   <option value="" disabled>Selecciona Vector Y</option>
@@ -273,14 +273,14 @@ export default function AreaChart({weatherData}) {
         <>
           <form onSubmit={handlePrediction}>
             <div className="border-b border-gray-900/10 pb-12 mx-4 md:mx-0">
-              <h2 className="text-base font-semibold leading-7 text-gray-900">Prediccion con el metodo de regresion linear</h2>
-              <p className="mt-1 text-sm leading-6 text-gray-600">Agrega un valor nuevo a el eje X para lograr una prediccion con la formula de regresion lineal</p>
+              <h2 className="text-base font-semibold leading-7 text-gray-900 text-center md:text-left">Prediccion con el metodo de regresion linear</h2>
+              <p className="mt-1 text-sm leading-6 text-gray-600 text-center md:text-left">Agrega un valor nuevo a el eje X para lograr una prediccion con la formula de regresion lineal</p>
 
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div className="sm:col-span-3">
-                  <label className="block text-sm font-medium leading-6 text-gray-900">Nuevo Valor eje X</label>
+                  <label className="block text-sm font-medium leading-6 text-gray-900 text-center md:text-left">Nuevo Valor eje X</label>
                   <div className="mt-2">
-                    <input aria-label="Input prediccion eje X" type="float" value={prediction} onChange={(e) => {setPrediction(e.target.value)}} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                    <input aria-label="Input prediccion eje X" type="number" step="any" value={prediction} onChange={(e) => {setPrediction(e.target.value)}} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                   </div>
                 </div>
                 <div className="sm:col-span-3 mt-auto">

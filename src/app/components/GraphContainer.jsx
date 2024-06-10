@@ -14,7 +14,7 @@ export default function GraphContainer ({loading, data, error}) {
     return null 
   }
   return (
-    <div className="container mx-auto bg-white">
+    <div className="container mx-auto bg-white pb-6">
         <AreaChart weatherData={data}/>
         <LineChart weatherData={data}/>
     </div>
