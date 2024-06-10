@@ -23,9 +23,14 @@ body {
 
 .leaflet-container {
   width: 100vw;
-  height: 50vh;
+  height: 60vh;
 }
-
+@media only screen and (max-width: 768px) {
+  .leaflet-container {
+    width: 100vw;
+    height: 35vh;
+  }
+}
 .react-datepicker-wrapper {
   width: 100%;
 }

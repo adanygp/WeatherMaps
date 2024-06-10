@@ -2,7 +2,7 @@
 import {useState,useCallback,useRef,useMemo } from 'react'
 import { Marker } from "react-leaflet";
 import L from 'leaflet';
-import marker from '../../../public/vercel.svg';
+import marker from '../../../public/pointer.svg';
 
 
 export default function DraggableMarker ({cordinates, changeCordinates}) {
@@ -11,7 +11,7 @@ export default function DraggableMarker ({cordinates, changeCordinates}) {
     iconUrl: marker.src,
     iconRetinaUrl: marker.src,
     popupAnchor:  [-0, -0],
-    iconSize: [70,70], 
+    iconSize: [30,30], 
   });
   
   const markerRef = useRef(null)
@@ -20,6 +20,7 @@ export default function DraggableMarker ({cordinates, changeCordinates}) {
       dragend() {
         const marker = markerRef.current
         if (marker != null) {
+          console.log('marker.getLatLng()',marker.getLatLng())
           changeCordinates(marker.getLatLng())
         }
       },
