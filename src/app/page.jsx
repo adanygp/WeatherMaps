@@ -1,7 +1,7 @@
 'use strict';
 "use client"; 
 import dynamic from "next/dynamic"
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import GraphContainer from "./components/GraphContainer";
 import MapForm from "./components/MapForm";
 import useFetch from "./hooks/useFetch";
@@ -10,14 +10,16 @@ import 'leaflet/dist/leaflet.css'
 import 'react-datepicker/dist/react-datepicker.css';
 export default function Home() {
 
+  const apiKey = process.env.NEXT_PUBLIC_API_KEY;
   const [initialCordinates , setInitialCordinates] = useState({ lat: 20, lng: -105,})
-  const { data, loading, error } = useFetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${initialCordinates.lat}&lon=${initialCordinates.lng}&appid=77c1bc8254074d5f6da1b17e9975b58d&units=metric`);
-
+  const { data, loading, error } = useFetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${initialCordinates.lat}&lon=${initialCordinates.lng}&appid=${apiKey}&units=metric`);
+  
   const handleCordinates = (e) => {
       const { name, value } = e.target;
       setInitialCordinates({...initialCordinates, [name]:value})
   }
 
+  
   return (
     <>
       <MapForm initialCordinates={initialCordinates} handleCordinates={handleCordinates} />
