@@ -1,7 +1,7 @@
 
 # DinametraChart  NextJs
 
-Este Proyecto es una prueba para la empresa dinametra basado en una llamada a la API OpenWeather con lo cual se logran hacer 2 graficas con las caracteristicas climaticas adquiridas ademas de cambios a las graficas gracias a los diferentes filtros
+Este Proyecto esta basado en una llamada a la API OpenWeather con lo cual se logran hacer 2 graficas con las caracteristicas climaticas adquiridas ademas de cambios a las graficas gracias a los diferentes filtros
 
 
 ## desplegar
